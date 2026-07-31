@@ -59,11 +59,11 @@ class Database {
   async _run(sql, params = []) {
     await this._ensureReady();
     this._db.run(sql, params);
+    // sql.js: 通过查询获取 last insert rowid
+    const idResult = this._db.exec("SELECT last_insert_rowid()");
+    const lastInsertRowid = idResult[0]?.values?.[0]?.[0] ?? 0;
     saveDb(this._db);
-    return {
-      changes: this._db.getRowsModified(),
-      lastInsertRowid: this._db.exec("SELECT last_insert_rowid()")[0]?.values[0]?.[0] || 0
-    };
+    return { changes: this._db.getRowsModified(), lastInsertRowid };
   }
 
   // 建表等批量操作
