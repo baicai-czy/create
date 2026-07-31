@@ -78,6 +78,15 @@ export function GlassCard({ children, className = '' }: { children: ReactNode; c
   );
 }
 
+/* ===== GradientBorderCard — 渐变边框卡片 ===== */
+export function GradientBorderCard({ children, className = '', padding = 'p-6 md:p-8', hover = false }: CardProps) {
+  return (
+    <div className={`card-gradient-border ${padding} ${hover ? 'card-hover cursor-pointer' : ''} ${className}`}>
+      {children}
+    </div>
+  );
+}
+
 /* ===== SectionTitle ===== */
 interface SectionTitleProps {
   title: string;
