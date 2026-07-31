@@ -32,8 +32,8 @@ export default function SimpleManager({ title, endpoint, fields }: Props) {
       if (Array.isArray(data)) {
         setList(data);
       } else if (typeof data === 'object') {
-        // Config 返回 {key: value} 对象，转成数组
-        setList(Object.entries(data).map(([k, v]) => ({ key: k, value: String(v) })));
+        // Config 返回 {key: value} 对象，转成数组，过滤空值
+        setList(Object.entries(data).filter(([_, v]) => v !== '' && v !== null).map(([k, v]) => ({ key: k, value: String(v) })));
       } else {
         setList([]);
       }
