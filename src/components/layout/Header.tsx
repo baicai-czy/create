@@ -61,7 +61,7 @@ export default function Header() {
               <div
                 key={item.label}
                 className="relative"
-                onMouseEnter={() => (item.sections || item.children) && handleMegaEnter(item.label)}
+                onMouseEnter={() => (item.children) && handleMegaEnter(item.label)}
               >
                 <Link
                   to={item.path}
@@ -72,70 +72,14 @@ export default function Header() {
                   }`}
                 >
                   {item.label}
-                  {(item.sections || item.children) && (
+                  {(item.children) && (
                     <ChevronDown className={`w-3.5 h-3.5 opacity-50 transition-transform duration-200 ${activeMega === item.label ? 'rotate-180' : ''}`} />
                   )}
                 </Link>
 
-                {/* Sections Mega Menu (产品 / 解决方案) */}
+                {/* Dropdown Menu */}
                 <AnimatePresence>
-                  {item.sections && activeMega === item.label && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.5, ease: [0.25, 0, 0, 1] }}
-                      className="fixed top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-2xl"
-                      onMouseEnter={() => handleMegaEnter(item.label)}
-                      onMouseLeave={handleMegaLeave}
-                    >
-                    <div className="max-w-[1440px] mx-auto px-8 py-8">
-                      <div className={`grid gap-8 ${item.sections.length <= 4 ? 'grid-cols-4' : 'grid-cols-6'}`}>
-                        {item.sections.map((section) => (
-                          <div key={section.title}>
-                            <h4 className="text-sm font-semibold text-gray-900 mb-3">{section.title}</h4>
-                            <ul className="space-y-1.5">
-                              {section.items.map((subItem) => (
-                                <li key={subItem.label}>
-                                  <Link
-                                    to={subItem.path || item.path}
-                                    className="flex items-center gap-2 text-sm text-gray-500 hover:text-primary hover:bg-gray-50 rounded-md px-2 py-1.5 -mx-2 transition-colors"
-                                  >
-                                    {subItem.label}
-                                    {subItem.tag && (
-                                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
-                                        subItem.tag === '新品' ? 'bg-green-50 text-green-600' : 'bg-accent-50 text-accent-600'
-                                      }`}>
-                                        {subItem.tag}
-                                      </span>
-                                    )}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-                      {/* Bottom link */}
-                      <div className="mt-8 pt-6 border-t border-gray-100 flex items-center justify-between">
-                        <Link to={item.path} className="text-sm font-medium text-primary hover:underline">
-                          查看全部{item.label} →
-                        </Link>
-                        <div className="flex items-center gap-6 text-xs text-gray-400">
-                          <Link to="/products/ai" className="hover:text-primary transition-colors">GPU算力</Link>
-                          <Link to="/products" className="hover:text-primary transition-colors">弹性计算</Link>
-                          <Link to="/solutions" className="hover:text-primary transition-colors">政务云</Link>
-                          <Link to="/contact" className="hover:text-primary transition-colors">免费咨询</Link>
-                        </div>
-                      </div>
-                    </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* Simple Dropdown (生态合作 / 客户案例 / 文档支持 / 关于城际云) */}
-                <AnimatePresence>
-                  {item.children && !item.sections && activeMega === item.label && (
+                  {item.children &&  activeMega === item.label && (
                     <motion.div
                       initial={{ opacity: 0, y: -4, scaleY: 0.96 }}
                       animate={{ opacity: 1, y: 0, scaleY: 1 }}
@@ -282,21 +226,7 @@ export default function Header() {
                 >
                   {item.label}
                 </Link>
-                {item.sections && (
-                  <div className="ml-4 border-l border-gray-100 pl-4 space-y-1 mb-2">
-                    {item.sections.flatMap(s => s.items).map((sub) => (
-                      <Link
-                        key={sub.label}
-                        to={sub.path || item.path}
-                        className="block px-4 py-2 rounded-lg text-sm text-gray-500 hover:text-primary hover:bg-gray-50"
-                        onClick={() => setMobileOpen(false)}
-                      >
-                        {sub.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-                {item.children && !item.sections && (
+                {item.children && (
                   <div className="ml-4 border-l border-gray-100 pl-4 space-y-1 mb-2">
                     {item.children.map((child) => (
                       <Link

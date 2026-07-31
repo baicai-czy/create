@@ -3,7 +3,7 @@ import { MapPin, Phone, Mail } from 'lucide-react';
 import { footerLinks } from '../../data/navigation';
 
 export default function Footer() {
-  const sections = [footerLinks.products, footerLinks.solutions, footerLinks.about, footerLinks.support, footerLinks.contact];
+  const sections = [footerLinks.products, footerLinks.solutions, footerLinks.business, footerLinks.support, footerLinks.contact];
 
   return (
     <footer className="bg-gray-900 text-gray-400">
