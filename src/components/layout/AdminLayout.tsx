@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import {
   LayoutDashboard, Image, Newspaper, Package, Lightbulb,
@@ -34,9 +34,12 @@ export default function AdminLayout() {
   const userStr = localStorage.getItem('auth_user');
   const user = userStr ? JSON.parse(userStr) : null;
 
-  if (!user && location.pathname !== '/admin/login') {
-    // Redirect to login in production - currently just render anyway for dev
-  }
+  // 未登录自动跳转
+  useEffect(() => {
+    if (!user && location.pathname !== '/admin/login') {
+      navigate('/admin/login');
+    }
+  }, [user, location.pathname, navigate]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
