@@ -1,20 +1,41 @@
-import { heroSlides, quickEntries, businessOverview, newsHighlights, dataShowcase, partners } from '../data/home';
+import { heroSlides, quickEntries, businessOverview, newsHighlights, dataShowcase, partners as defaultPartners } from '../data/home';
 import { SectionTitle, LinkButton } from '../components/ui/index';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '../components/common/ScrollReveal';
 import { CountUp } from '../components/common/CountUp';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronRight, Cloud, Cpu, Lightbulb, Phone } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { homeApi } from '../api';
 
 /* ===== HeroBanner ===== */
 function HeroBanner() {
   const [current, setCurrent] = useState(0);
-  const slide = heroSlides[current];
+  const [banners, setBanners] = useState(heroSlides);
+
+  // 从后端加载Banner数据
+  useEffect(() => {
+    homeApi.getBanners().then(apiBanners => {
+      if (apiBanners && apiBanners.length > 0) {
+        const mapped = apiBanners.map((b: any) => ({
+          id: b.id,
+          title: b.title,
+          subtitle: b.subtitle || '',
+          description: b.description || '',
+          cta1: { label: b.link_text || '了解更多', path: b.link_url || '/contact' },
+          cta2: { label: b.secondary_link_text || '关于我们', path: b.secondary_link_url || '/about' },
+          gradient: 'from-primary-600 via-primary-500 to-cyan-400',
+        }));
+        if (mapped.length > 0) setBanners(mapped);
+      }
+    }).catch(() => {}); // 后端不可用时使用默认数据
+  }, []);
+
+  const slide = banners[current % banners.length];
 
   useEffect(() => {
-    const timer = setInterval(() => setCurrent((c) => (c + 1) % heroSlides.length), 5000);
+    const timer = setInterval(() => setCurrent((c) => (c + 1) % banners.length), 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [banners.length]);
 
   return (
     <section className="relative min-h-[560px] md:min-h-[650px] flex items-center overflow-hidden bg-gray-900">
@@ -224,7 +245,15 @@ function DataShowcase() {
 
 /* ===== PartnerLogos ===== */
 function PartnerLogos() {
-  const doubled = [...partners, ...partners];
+  const [partnerList, setPartnerList] = useState(defaultPartners);
+
+  useEffect(() => {
+    homeApi.getPartners().then(names => {
+      if (names && names.length > 0) setPartnerList(names);
+    }).catch(() => {});
+  }, []);
+
+  const doubled = [...partnerList, ...partnerList];
 
   return (
     <section className="py-16 bg-white border-t border-gray-100">

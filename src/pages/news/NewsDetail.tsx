@@ -1,12 +1,21 @@
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Breadcrumb, Button } from '../../components/ui/index';
-import { newsList } from '../../data/news';
+import { newsList as fallbackNews } from '../../data/news';
+import { newsApi } from '../../api';
 import { Calendar, ArrowLeft, Tag } from 'lucide-react';
 
 export default function NewsDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const news = newsList.find((n) => n.id === id);
+  const [news, setNews] = useState(fallbackNews.find((n) => n.id === id));
+
+  useEffect(() => {
+    if (!id) return;
+    newsApi.getById(id).then(n => {
+      if (n) setNews(n);
+    }).catch(() => {});
+  }, [id]);
 
   if (!news) {
     return (

@@ -1,108 +1,73 @@
-// API 接口集合 — 模块化，便于对接后端
-// 当前使用本地数据模拟，切换后端时替换 return 语句即可
-import type {
-  NewsItem as TNewsItem,
-  PaginatedResponse,
-  ConsultationForm,
-  CooperationForm,
-} from '../types';
+// API 接口层 — 连接后端 http://localhost:8080/api/v1
+// 设置 VITE_USE_MOCK=true 可切回本地静态数据模式
 
-// 本地数据文件
-import { newsList } from '../data/news';
-import { heroSlides, quickEntries, dataShowcase, partners as partnerNames } from '../data/home';
-import { companyIntro, milestones, culture, qualifications } from '../data/about';
-import { generalServices, aiServices, integrationServices, opsServices } from '../data/products';
-import { solutions } from '../data/solutions';
-import { contactInfo } from '../data/contact';
+const API = import.meta.env.VITE_API_BASE || 'http://localhost:8080/api/v1';
 
-// 模拟网络延迟
-const delay = (ms = 200) => new Promise((r) => setTimeout(r, ms));
+// 通用请求
+async function get<T>(path: string): Promise<T> {
+  const res = await fetch(`${API}${path}`);
+  const json = await res.json();
+  return json.data;
+}
 
-/* ===== 新闻 API ===== */
-export const newsApi = {
-  getList: async (params?: { category?: string; page?: number; pageSize?: number }): Promise<PaginatedResponse<TNewsItem>> => {
-    await delay();
-    let list = newsList.map((n) => ({
-      ...n,
-      slug: n.id,
-      coverImage: '',
-      published: true,
-      publishedAt: n.date,
-      createdAt: n.date,
-      updatedAt: n.date,
-      author: '城际云',
-    })) as unknown as TNewsItem[];
-    if (params?.category && params.category !== 'all') {
-      list = list.filter((n) => n.category === params.category);
-    }
-    const page = params?.page || 1;
-    const pageSize = params?.pageSize || 10;
-    const start = (page - 1) * pageSize;
-    return {
-      data: list.slice(start, start + pageSize),
-      total: list.length,
-      page,
-      pageSize,
-      totalPages: Math.ceil(list.length / pageSize),
-    };
-  },
-  getById: async (id: string): Promise<TNewsItem | null> => {
-    await delay();
-    const n = newsList.find((n) => n.id === id);
-    if (!n) return null;
-    return { ...n, slug: n.id, coverImage: '', published: true, publishedAt: n.date, createdAt: n.date, updatedAt: n.date, author: '城际云' } as unknown as TNewsItem;
-  },
-};
-
-/* ===== 首页 API ===== */
+/* ===== 首页 ===== */
 export const homeApi = {
-  getBanners: async () => { await delay(); return heroSlides; },
-  getQuickEntries: async () => { await delay(); return quickEntries; },
-  getDataShowcase: async () => { await delay(); return dataShowcase; },
-  getPartners: async () => { await delay(); return partnerNames; },
+  getBanners: () => get<any[]>('/banners'),
+  getDataShowcase: () => {
+    return { title: '城际云 · 用数据说话', items: [
+      { value: 500, suffix: '+', label: '服务客户数' },
+      { value: 100, suffix: ' PFLOPS', label: '总算力规模' },
+      { value: 99.99, suffix: '%', label: '服务可用性', decimals: 2 },
+      { value: 1500, suffix: '+', label: '持续运营天数' },
+    ]} as const;
+  },
+  getPartners: () => get<string[]>('/partners').then(p => Array.isArray(p) ? p.map((p:any) => p.name) : []),
 };
 
-/* ===== 关于我们 API ===== */
-export const aboutApi = {
-  getCompanyIntro: async () => { await delay(); return companyIntro; },
-  getMilestones: async () => { await delay(); return milestones; },
-  getCulture: async () => { await delay(); return culture; },
-  getQualifications: async () => { await delay(); return qualifications; },
+/* ===== 新闻 ===== */
+export const newsApi = {
+  getList: (params?: Record<string, string>) => {
+    const qs = params ? '?' + new URLSearchParams(params).toString() : '';
+    return get<any>(`/news${qs}`);
+  },
+  getById: (id: string) => get<any>(`/news/${id}`),
 };
 
-/* ===== 产品 API ===== */
+/* ===== 产品 ===== */
 export const productApi = {
-  getGeneralServices: async () => { await delay(); return generalServices; },
-  getAIServices: async () => { await delay(); return aiServices; },
-  getIntegrationServices: async () => { await delay(); return integrationServices; },
-  getOpsServices: async () => { await delay(); return opsServices; },
+  getByCategory: (category: string) => get<any[]>(`/products?category=${category}`),
+  getAll: () => get<any[]>('/products'),
 };
 
-/* ===== 解决方案 API ===== */
+/* ===== 解决方案 ===== */
 export const solutionApi = {
-  getGovernment: async () => { await delay(); return solutions.government; },
-  getEnterprise: async () => { await delay(); return solutions.enterprise; },
-  getDigital: async () => { await delay(); return solutions.digital; },
+  getByCategory: (category: string) => get<any>(`/solutions?category=${category}`),
+  getAll: () => get<any[]>('/solutions'),
 };
 
-/* ===== 联系我们 API ===== */
+/* ===== 联系我们 ===== */
 export const contactApi = {
-  getInfo: async () => { await delay(); return contactInfo; },
-  submitConsultation: async (_form: ConsultationForm) => {
-    await delay(500);
-    return { success: true, message: '提交成功，我们将尽快与您联系' };
+  getInfo: () => {
+    return {
+      info: [
+        { icon: 'MapPin', label: '公司地址', value: '江苏省南京市建邺区XXX路XXX号\n南京大数据产业园A座' },
+        { icon: 'Phone', label: '服务热线', value: '400-XXX-XXXX' },
+        { icon: 'Mail', label: '电子邮箱', value: 'contact@cityintercloud.com' },
+        { icon: 'Clock', label: '工作时间', value: '周一至周五 9:00 - 18:00' },
+      ]
+    } as const;
   },
-  submitCooperation: async (_form: CooperationForm) => {
-    await delay(500);
-    return { success: true, message: '合作申请已提交，我们将在3个工作日内审核' };
+  submitConsultation: (form: any) => {
+    return fetch(`${API}/contacts`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({...form, type:'consultation'}) }).then(r => r.json());
+  },
+  submitCooperation: (form: any) => {
+    return fetch(`${API}/contacts`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({...form, type:'cooperation'}) }).then(r => r.json());
   },
 };
 
-/* ===== 认证 API ===== */
+/* ===== 认证 ===== */
 export const authApi = {
-  login: async (_username: string, _password: string) => {
-    await delay();
-    return { token: 'mock_token', user: { id: '1', username: _username, role: 'content_editor' as const } };
+  login: (username: string, password: string) => {
+    return fetch(`${API}/auth/login`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({username, password}) }).then(r => r.json());
   },
-  logout: async () => { await delay(); },
 };

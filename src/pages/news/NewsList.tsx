@@ -1,32 +1,40 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Breadcrumb, SectionTitle, Badge } from '../../components/ui/index';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '../../components/common/ScrollReveal';
-import { newsList, newsCategories } from '../../data/news';
+import { newsCategories } from '../../data/news';
+import { newsApi } from '../../api';
 import { Calendar, ChevronRight } from 'lucide-react';
+
+import { newsList as fallbackNews } from '../../data/news';
 
 export default function NewsList() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCategory = searchParams.get('category') || 'all';
   const [page, setPage] = useState(1);
+  const [newsData, setNewsData] = useState<any[]>(fallbackNews);
+  const [totalPages, setTotalPages] = useState(Math.ceil(fallbackNews.length / 6));
   const pageSize = 6;
 
-  const filtered = useMemo(
-    () => (activeCategory === 'all' ? newsList : newsList.filter((n) => n.category === activeCategory)),
-    [activeCategory]
-  );
-
-  const totalPages = Math.ceil(filtered.length / pageSize);
-  const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize);
+  // 从后端API加载新闻
+  useEffect(() => {
+    const params: Record<string, string> = { page: String(page), pageSize: String(pageSize) };
+    if (activeCategory !== 'all') params.category = activeCategory;
+    newsApi.getList(params).then(res => {
+      if (res?.data) {
+        setNewsData(res.data);
+        setTotalPages(res.totalPages || 1);
+      }
+    }).catch(() => {}); // 后端不可用时使用默认数据
+  }, [activeCategory, page]);
 
   const handleCategory = (value: string) => {
     setPage(1);
-    if (value === 'all') {
-      setSearchParams({});
-    } else {
-      setSearchParams({ category: value });
-    }
+    if (value === 'all') setSearchParams({});
+    else setSearchParams({ category: value });
   };
+
+  const pageItems = newsData;
 
   const categoryLabel = (cat: string) => {
     const map: Record<string, string> = { company: '公司动态', industry: '行业资讯', notice: '通知公告' };
