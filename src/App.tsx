@@ -3,6 +3,13 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
+import AdminLayout from './components/layout/AdminLayout';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminLogin from './pages/admin/AdminLogin';
+import BannerManager from './pages/admin/BannerManager';
+import NewsManager from './pages/admin/NewsManager';
+import ProductManager from './pages/admin/ProductManager';
+import SimpleManager from './pages/admin/SimpleManager';
 
 // Lazy-loaded route pages for code splitting
 const CompanyIntro = lazy(() => import('./pages/about/CompanyIntro'));
@@ -71,6 +78,22 @@ export default function App() {
         <Route path="/news/:id" element={<LazyPage><NewsDetail /></LazyPage>} />
         {/* Contact */}
         <Route path="/contact" element={<LazyPage><ContactUs /></LazyPage>} />
+      </Route>
+
+      {/* Admin */}
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="banners" element={<BannerManager />} />
+        <Route path="news" element={<NewsManager />} />
+        <Route path="products" element={<ProductManager />} />
+        <Route path="solutions" element={<SimpleManager title="解决方案管理" endpoint="solutions/all" fields={[{key:'title',label:'标题'},{key:'category',label:'分类'},{key:'published',label:'状态'}]} />} />
+        <Route path="partners" element={<SimpleManager title="合作伙伴管理" endpoint="partners" fields={[{key:'name',label:'名称'},{key:'website',label:'网站'},{key:'sort',label:'排序'}]} />} />
+        <Route path="certificates" element={<SimpleManager title="资质证书管理" endpoint="certificates" fields={[{key:'name',label:'名称'},{key:'category',label:'分类'},{key:'sort',label:'排序'}]} />} />
+        <Route path="contacts" element={<SimpleManager title="咨询管理" endpoint="contacts" fields={[{key:'name',label:'姓名'},{key:'type',label:'类型'},{key:'status',label:'状态'}]} />} />
+        <Route path="config" element={<SimpleManager title="网站配置" endpoint="config" fields={[{key:'key',label:'配置项'},{key:'value',label:'配置值'}]} />} />
+        <Route path="users" element={<SimpleManager title="用户管理" endpoint="auth/users" fields={[{key:'username',label:'用户名'},{key:'role',label:'角色'},{key:'created_at',label:'创建时间'}]} />} />
+        <Route path="logs" element={<SimpleManager title="操作日志" endpoint="logs" fields={[{key:'username',label:'用户'},{key:'action',label:'操作'},{key:'created_at',label:'时间'}]} />} />
       </Route>
     </Routes>
   );
