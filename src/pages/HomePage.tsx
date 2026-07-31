@@ -24,6 +24,7 @@ function HeroBanner() {
           cta1: { label: b.link_text || '了解更多', path: b.link_url || '/contact' },
           cta2: { label: b.secondary_link_text || '关于我们', path: b.secondary_link_url || '/about' },
           gradient: 'from-primary-600 via-primary-500 to-cyan-400',
+          image: b.image || '',
         }));
         if (mapped.length > 0) setBanners(mapped);
       }
@@ -41,7 +42,13 @@ function HeroBanner() {
     <section className="relative min-h-[560px] md:min-h-[650px] flex items-center overflow-hidden bg-gray-900">
       {/* 极光渐变背景 */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-900 to-transparent z-10" />
+        {/* Banner背景图 */}
+        {slide.image && (
+          <div className="absolute inset-0 z-0">
+            <img src={slide.image} alt="" className="w-full h-full object-cover" />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-gray-900/70 to-transparent z-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent z-10" />
         {/* 弥散光 */}
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-primary/30 via-purple-500/20 to-cyan-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '0s' }} />

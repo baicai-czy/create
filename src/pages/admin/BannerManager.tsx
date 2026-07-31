@@ -1,13 +1,98 @@
-import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Save, X, Eye } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Plus, Edit, Trash2, Save, X, Eye, Upload, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '../../components/common/Toast';
 
 const API = 'http://localhost:8080/api/v1';
 const h = () => ({ 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('auth_token')}` });
 
-interface Banner { id: number; title: string; subtitle: string; description: string; link_url: string; link_text: string; secondary_link_url: string; secondary_link_text: string; sort: number; published: number; }
+interface Banner { id: number; image: string; title: string; subtitle: string; description: string; link_url: string; link_text: string; secondary_link_url: string; secondary_link_text: string; sort: number; published: number; }
 
-const emptyBanner: Partial<Banner> = { title: '', subtitle: '', description: '', link_url: '', link_text: '', secondary_link_url: '', secondary_link_text: '', sort: 0, published: 1 };
+const emptyBanner: Partial<Banner> = { image: '', title: '', subtitle: '', description: '', link_url: '', link_text: '', secondary_link_url: '', secondary_link_text: '', sort: 0, published: 1 };
+
+/* ===== 图片拖拽上传 ===== */
+function ImageUploadArea({ editing, setEditing }: { editing: any; setEditing: (v: any) => void }) {
+  const [dragging, setDragging] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const { showToast } = useToast();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const uploadFile = async (file: File) => {
+    if (!file.type.startsWith('image/')) { showToast('error', '请选择图片文件'); return; }
+    if (file.size > 5 * 1024 * 1024) { showToast('error', '图片不能超过5MB'); return; }
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      const res = await fetch(`${API}/upload/banner`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${localStorage.getItem('auth_token')}` },
+        body: formData,
+      });
+      const json = await res.json();
+      if (json.code === 200) {
+        const imageUrl = `http://localhost:8080${json.data.url}`;
+        setEditing({ ...editing, image: imageUrl });
+        showToast('success', '背景图上传成功');
+      } else {
+        showToast('error', json.message || '上传失败');
+      }
+    } catch {
+      showToast('error', '上传失败，请检查网络');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault(); setDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) uploadFile(file);
+  };
+
+  const preview = editing.image;
+
+  return (
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-1.5">Banner背景图</label>
+      {preview ? (
+        <div className="relative group rounded-xl overflow-hidden border border-gray-200">
+          <img src={preview} alt="Banner预览" className="w-full h-40 object-cover" />
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+            <button onClick={() => inputRef.current?.click()} className="px-3 py-1.5 bg-white text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-100">更换图片</button>
+            <button onClick={() => setEditing({ ...editing, image: '' })} className="px-3 py-1.5 bg-red-500 text-white rounded-lg text-xs font-medium hover:bg-red-600">删除</button>
+          </div>
+        </div>
+      ) : (
+        <div
+          onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={handleDrop}
+          onClick={() => inputRef.current?.click()}
+          className={`relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
+            dragging ? 'border-primary bg-primary-50' : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+          }`}
+        >
+          {uploading ? (
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              <p className="text-sm text-gray-500">上传中...</p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
+                {dragging ? <Upload className="w-6 h-6 text-primary" /> : <ImageIcon className="w-6 h-6 text-gray-400" />}
+              </div>
+              <p className="text-sm text-gray-600 font-medium">{dragging ? '松开鼠标上传图片' : '拖拽图片到此处，或点击上传'}</p>
+              <p className="text-xs text-gray-400">支持 JPG/PNG/GIF/WebP，不超过5MB</p>
+            </div>
+          )}
+        </div>
+      )}
+      <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadFile(f); e.target.value = ''; }} />
+    </div>
+  );
+}
 
 export default function BannerManager() {
   const [banners, setBanners] = useState<Banner[]>([]);
@@ -62,6 +147,9 @@ export default function BannerManager() {
               <h2 className="text-lg font-bold text-gray-900">{editing.id ? '编辑Banner' : '新增Banner'}</h2>
               <button onClick={() => setEditing(null)} className="p-1 hover:bg-gray-100 rounded-lg"><X className="w-5 h-5 text-gray-500" /></button>
             </div>
+            {/* 图片上传区域 */}
+            <ImageUploadArea editing={editing} setEditing={setEditing} />
+
             <div className="space-y-4">
               {fields.map((f) => (
                 <div key={f.key}>

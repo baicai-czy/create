@@ -14,6 +14,7 @@ import certificatesRouter from './routes/certificates.js';
 import contactsRouter from './routes/contacts.js';
 import configRouter from './routes/config.js';
 import logsRouter from './routes/logs.js';
+import uploadRouter from './routes/upload.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -34,6 +35,7 @@ app.use('/api/v1/certificates', certificatesRouter);
 app.use('/api/v1/contacts', contactsRouter);
 app.use('/api/v1/config', configRouter);
 app.use('/api/v1/logs', logsRouter);
+app.use('/api/v1/upload', uploadRouter);
 
 // 健康检查
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));

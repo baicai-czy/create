@@ -8,6 +8,7 @@ export const heroSlides = [
     cta1: { label: '免费咨询', path: '/contact' },
     cta2: { label: '了解更多', path: '/about' },
     gradient: 'from-primary-600 via-primary-500 to-cyan-400',
+    image: '',
   },
   {
     id: 2,
@@ -17,6 +18,7 @@ export const heroSlides = [
     cta1: { label: '了解智算服务', path: '/products/ai' },
     cta2: { label: '查看解决方案', path: '/solutions' },
     gradient: 'from-purple-600 via-primary-500 to-cyan-400',
+    image: '',
   },
   {
     id: 3,
