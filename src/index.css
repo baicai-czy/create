@@ -4,9 +4,9 @@
 
 /* ===== CSS 设计令牌变量 ===== */
 :root {
-  --color-primary: #0066FF;
-  --color-primary-hover: #0058E0;
-  --gradient-breathe: linear-gradient(135deg, #0066FF 0%, #764BFF 50%, #00C8FF 100%);
+  --color-primary: #1A5BB3;
+  --color-primary-hover: #164D99;
+  --gradient-breathe: linear-gradient(135deg, #1A5BB3 0%, #6C5ED4 50%, #00B4D8 100%);
   --glass-bg: rgba(255, 255, 255, 0.72);
   --glass-blur: 20px;
 }
@@ -86,7 +86,7 @@ body {
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, #0066FF 0%, #764BFF 100%);
+    background: linear-gradient(135deg, #1A5BB3 0%, #6C5ED4 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

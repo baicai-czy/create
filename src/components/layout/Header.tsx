@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Menu, X, ChevronDown, User, Sparkles } from 'lucide-react';
+import { Search, Menu, X, ChevronDown, Headphones, MessageCircle } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { mainNav } from '../../data/navigation';
+import { useChat } from '../../hooks/useChatContext';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -9,6 +11,7 @@ export default function Header() {
   const [activeMega, setActiveMega] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const { openChat } = useChat();
   const location = useLocation();
   const megaTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -75,8 +78,17 @@ export default function Header() {
                 </Link>
 
                 {/* Sections Mega Menu (产品 / 解决方案) */}
-                {item.sections && activeMega === item.label && (
-                  <div className="fixed top-16 left-0 right-0 bg-white/98 backdrop-blur-xl border-b border-gray-100 shadow-xl animate-fade-up" onMouseEnter={() => handleMegaEnter(item.label)} onMouseLeave={handleMegaLeave}>
+                <AnimatePresence>
+                  {item.sections && activeMega === item.label && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.5, ease: [0.25, 0, 0, 1] }}
+                      className="fixed top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-2xl"
+                      onMouseEnter={() => handleMegaEnter(item.label)}
+                      onMouseLeave={handleMegaLeave}
+                    >
                     <div className="max-w-[1440px] mx-auto px-8 py-8">
                       <div className={`grid gap-8 ${item.sections.length <= 4 ? 'grid-cols-4' : 'grid-cols-6'}`}>
                         {item.sections.map((section) => (
@@ -117,13 +129,24 @@ export default function Header() {
                         </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 {/* Simple Dropdown (生态合作 / 客户案例 / 文档支持 / 关于城际云) */}
-                {item.children && !item.sections && activeMega === item.label && (
-                  <div className="absolute top-full left-0 pt-2 min-w-[200px]" onMouseEnter={() => handleMegaEnter(item.label)} onMouseLeave={handleMegaLeave}>
-                    <div className="glass rounded-xl p-2 shadow-glass border border-white/30">
+                <AnimatePresence>
+                  {item.children && !item.sections && activeMega === item.label && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -4, scaleY: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scaleY: 1 }}
+                      exit={{ opacity: 0, y: -4, scaleY: 0.96 }}
+                      transition={{ duration: 0.4, ease: [0.25, 0, 0, 1] }}
+                      className="absolute top-full left-0 pt-2 min-w-[200px]"
+                      onMouseEnter={() => handleMegaEnter(item.label)}
+                      onMouseLeave={handleMegaLeave}
+                      style={{ transformOrigin: 'top' }}
+                    >
+                    <div className="bg-white rounded-xl p-2 shadow-xl border border-gray-200">
                       {item.children.map((child) => (
                         <Link
                           key={child.path}
@@ -135,8 +158,9 @@ export default function Header() {
                         </Link>
                       ))}
                     </div>
-                  </div>
-                )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ))}
           </nav>
@@ -154,10 +178,18 @@ export default function Header() {
               </button>
 
               {/* Search overlay */}
-              {searchOpen && (
-                <>
-                  <div className="fixed inset-0 z-40" onClick={() => setSearchOpen(false)} />
-                  <div className="absolute right-0 top-full mt-2 w-80 md:w-96 bg-white rounded-xl shadow-xl border border-gray-100 p-4 z-50 animate-fade-up">
+              <AnimatePresence>
+                {searchOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setSearchOpen(false)} />
+                    <motion.div
+                      initial={{ opacity: 0, y: -4, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -4, scale: 0.97 }}
+                      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                      style={{ transformOrigin: 'top right' }}
+                      className="absolute right-0 top-full mt-2 w-80 md:w-96 bg-white rounded-xl shadow-xl border border-gray-100 p-4 z-50"
+                    >
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                       <input
@@ -190,26 +222,27 @@ export default function Header() {
                         <p className="text-xs text-gray-400">搜索结果为空</p>
                       </div>
                     )}
-                  </div>
-                </>
-              )}
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
             </div>
 
-            {/* Console */}
-            <Link
-              to="/contact"
+            {/* 智能客服 */}
+            <button
+              onClick={openChat}
               className="hidden sm:flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-[#0058E0] rounded-lg transition-all hover:shadow-md hover:-translate-y-0.5"
             >
-              <User className="w-4 h-4" />
-              <span>控制台</span>
-            </Link>
+              <Headphones className="w-4 h-4" />
+              <span>智能客服</span>
+            </button>
 
             {/* CTA */}
             <Link
               to="/contact"
               className="hidden md:flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-primary border border-primary/20 hover:border-primary hover:bg-primary-50 rounded-lg transition-all"
             >
-              <Sparkles className="w-4 h-4" />
+              <MessageCircle className="w-4 h-4" />
               <span>免费咨询</span>
             </Link>
 

@@ -85,20 +85,20 @@ function QuickEntry() {
   };
 
   return (
-    <section className="relative -mt-12 pb-0">
+    <section className="relative pb-12 pt-16">
       <div className="max-w-[1440px] mx-auto px-4 md:px-8">
-        <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-5">
           {quickEntries.map((entry) => {
             const Icon = iconMap[entry.icon] || Cloud;
             return (
               <StaggerItem key={entry.title}>
                 <Link to={entry.path}>
-                  <div className="glass rounded-xl p-6 card-hover cursor-pointer h-full group border border-white/30">
-                    <div className={`w-12 h-12 rounded-xl ${entry.color} flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300`}>
-                      <Icon className="w-6 h-6" />
+                  <div className="glass rounded-2xl p-8 md:p-10 card-hover cursor-pointer h-full group border border-white/30">
+                    <div className={`w-14 h-14 rounded-xl ${entry.color} flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300`}>
+                      <Icon className="w-7 h-7" />
                     </div>
-                    <h3 className="text-base font-semibold text-gray-900 mb-1 group-hover:text-primary transition-colors">{entry.title}</h3>
-                    <p className="text-sm text-gray-400">{entry.description}</p>
+                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">{entry.title}</h3>
+                    <p className="text-sm text-gray-400 leading-relaxed">{entry.description}</p>
                   </div>
                 </Link>
               </StaggerItem>
@@ -113,7 +113,7 @@ function QuickEntry() {
 /* ===== BusinessOverview ===== */
 function BusinessOverview() {
   return (
-    <section className="section-py">
+    <section className="pb-20 md:pb-28 pt-4">
       <div className="max-w-[1440px] mx-auto px-4 md:px-8">
         <SectionTitle title={businessOverview.title} subtitle={businessOverview.subtitle} />
         <div className="grid md:grid-cols-2 gap-8">

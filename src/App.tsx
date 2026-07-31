@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 
 // Lazy-loaded route pages for code splitting
 const CompanyIntro = lazy(() => import('./pages/about/CompanyIntro'));
@@ -34,7 +35,11 @@ function PageLoader() {
 }
 
 function LazyPage({ children }: { children: React.ReactNode }) {
-  return <Suspense fallback={<PageLoader />}>{children}</Suspense>;
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={<PageLoader />}>{children}</Suspense>
+    </ErrorBoundary>
+  );
 }
 
 export default function App() {
