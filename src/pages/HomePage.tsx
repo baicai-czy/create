@@ -5,6 +5,7 @@ import { CountUp } from '../components/common/CountUp';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronRight, Cloud, Cpu, Lightbulb, Phone } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { homeApi } from '../api';
 
 /* ===== HeroBanner ===== */
@@ -60,7 +61,15 @@ function HeroBanner() {
       </div>
 
       <div className="relative max-w-[1440px] mx-auto px-4 md:px-8 py-24 md:py-32 z-20 w-full">
-        <div className="max-w-2xl">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={slide.id}
+            initial={{ opacity: 0, y: 30, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: -20, filter: 'blur(4px)' }}
+            transition={{ duration: 0.6, ease: [0.25, 0, 0, 1] }}
+            className="max-w-2xl"
+          >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/8 backdrop-blur-sm border border-white/10 text-white/80 text-xs font-medium mb-8">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -81,17 +90,29 @@ function HeroBanner() {
               {slide.cta2.label}
             </Link>
           </div>
-        </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {/* Slide indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-        {heroSlides.map((_, i) => (
+      {/* Slide indicators — 进度条 */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2.5 items-center">
+        {banners.map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrent(i)}
-            className={`w-8 h-1 rounded-full transition-all ${i === current ? 'bg-white w-12' : 'bg-white/40'}`}
-          />
+            className="relative h-1 rounded-full transition-all duration-500 overflow-hidden"
+            style={{ width: i === current ? 40 : 8, background: i === current ? 'white' : 'rgba(255,255,255,0.3)' }}
+          >
+            {i === current && (
+              <motion.div
+                className="absolute inset-0 bg-white rounded-full"
+                initial={{ width: '0%' }}
+                animate={{ width: '100%' }}
+                transition={{ duration: 5, ease: 'linear' }}
+                key={current}
+              />
+            )}
+          </button>
         ))}
       </div>
     </section>
