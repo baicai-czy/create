@@ -4,7 +4,6 @@ import Footer from './Footer';
 import { ChatProvider } from '../../hooks/useChatContext';
 import ChatPanel from '../common/ServiceChat';
 import { useChat } from '../../hooks/useChatContext';
-import { ToastProvider } from '../common/Toast';
 
 function ChatWrapper() {
   const { chatOpen, closeChat } = useChat();
@@ -13,17 +12,15 @@ function ChatWrapper() {
 
 export default function Layout() {
   return (
-    <ToastProvider>
-      <ChatProvider>
-        <div className="min-h-screen flex flex-col bg-[#F5F7FA]">
-          <Header />
-          <main className="flex-1 pt-16">
-            <Outlet />
-          </main>
-          <Footer />
-        </div>
-        <ChatWrapper />
-      </ChatProvider>
-    </ToastProvider>
+    <ChatProvider>
+      <div className="min-h-screen flex flex-col bg-[#F5F7FA]">
+        <Header />
+        <main className="flex-1 pt-16">
+          <Outlet />
+        </main>
+        <Footer />
+      </div>
+      <ChatWrapper />
+    </ChatProvider>
   );
 }
