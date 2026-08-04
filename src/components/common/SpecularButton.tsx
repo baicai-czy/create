@@ -176,7 +176,7 @@ export function SpecularButton({
     <button
       ref={btnRef}
       onClick={onClick}
-      className={`relative inline-flex items-center justify-center border-0 font-medium tracking-wide leading-none text-[var(--sb-text)] bg-transparent rounded-[var(--sb-radius)] transition-transform duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-[var(--sb-line)] focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-default ${size === 'sm' ? 'text-[0.85rem] px-[22px] py-[10px]' : size === 'md' ? 'text-base px-[30px] py-[14px]' : 'text-lg px-[40px] py-[18px]'} ${className}`}
+      className={`relative inline-flex items-center justify-center border-0 font-medium tracking-wide leading-none text-[var(--sb-text)] bg-white rounded-[var(--sb-radius)] transition-transform duration-150 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-[var(--sb-line)] focus-visible:outline-offset-2 disabled:opacity-50 disabled:cursor-default shadow-lg shadow-black/10 ${size === 'sm' ? 'text-[0.85rem] px-[22px] py-[10px]' : size === 'md' ? 'text-base px-[30px] py-[14px]' : 'text-lg px-[40px] py-[18px]'} ${className}`}
       style={{ '--sb-radius': `${radius}px`, '--sb-line': lineColor, '--sb-text': textColor } as React.CSSProperties}
     >
       <span ref={fxRef} className="absolute inset-[-20px] pointer-events-none z-[1]" aria-hidden="true" />

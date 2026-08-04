@@ -22,8 +22,20 @@ const menuItems = [
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
+
+  // T009: 获取未阅咨询数量
+  useEffect(() => {
+    const token = localStorage.getItem('auth_token');
+    if (!token) return;
+    fetch('http://localhost:8080/api/v1/contacts/unread-count', {
+      headers: { Authorization: `Bearer ${token}` },
+    }).then(r => r.json()).then(d => {
+      setUnreadCount(d.data?.count || 0);
+    }).catch(() => {});
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('auth_token');
@@ -70,6 +82,12 @@ export default function AdminLayout() {
               >
                 <item.icon className="w-4 h-4" />
                 {item.label}
+                {/* T010: 未阅数量角标 */}
+                {item.path === '/admin/contacts' && unreadCount > 0 && (
+                  <span className="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[20px] text-center">
+                    {unreadCount}
+                  </span>
+                )}
               </Link>
             );
           })}

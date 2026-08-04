@@ -103,8 +103,11 @@ db.exec(`
     service TEXT,
     message TEXT,
     status TEXT DEFAULT 'pending',
+    read_status TEXT DEFAULT 'unread',
     created_at TEXT DEFAULT (datetime('now'))
   );
+  -- 迁移：确保旧表有 read_status 列
+  ALTER TABLE contacts ADD COLUMN read_status TEXT DEFAULT 'unread';
   CREATE TABLE IF NOT EXISTS config (
     key TEXT PRIMARY KEY,
     value TEXT NOT NULL

@@ -29,6 +29,7 @@ const DigitalTransformation = lazy(() => import('./pages/solutions/DigitalTransf
 const NewsList = lazy(() => import('./pages/news/NewsList'));
 const NewsDetail = lazy(() => import('./pages/news/NewsDetail'));
 const ContactUs = lazy(() => import('./pages/contact/ContactUs'));
+const ContactManager = lazy(() => import('./pages/admin/ContactManager'));
 
 function PageLoader() {
   return (
@@ -90,7 +91,7 @@ export default function App() {
         <Route path="solutions" element={<SimpleManager title="解决方案管理" endpoint="solutions/all" fields={[{key:'title',label:'标题'},{key:'category',label:'分类'},{key:'published',label:'状态'}]} />} />
         <Route path="partners" element={<SimpleManager title="合作伙伴管理" endpoint="partners" fields={[{key:'name',label:'名称'},{key:'website',label:'网站'},{key:'sort',label:'排序'}]} />} />
         <Route path="certificates" element={<SimpleManager title="资质证书管理" endpoint="certificates" fields={[{key:'name',label:'名称'},{key:'category',label:'分类'},{key:'sort',label:'排序'}]} />} />
-        <Route path="contacts" element={<SimpleManager title="咨询管理" endpoint="contacts" fields={[{key:'name',label:'姓名'},{key:'type',label:'类型'},{key:'status',label:'状态'}]} />} />
+        <Route path="contacts" element={<LazyPage><ContactManager /></LazyPage>} />
         <Route path="config" element={<SimpleManager title="网站配置" endpoint="config" fields={[{key:'key',label:'配置项'},{key:'value',label:'配置值'}]} />} />
         <Route path="users" element={<SimpleManager title="用户管理" endpoint="auth/users" fields={[{key:'username',label:'用户名'},{key:'role',label:'角色'},{key:'created_at',label:'创建时间'}]} />} />
         <Route path="logs" element={<SimpleManager title="操作日志" endpoint="logs" fields={[{key:'username',label:'用户'},{key:'action',label:'操作'},{key:'created_at',label:'时间'}]} />} />

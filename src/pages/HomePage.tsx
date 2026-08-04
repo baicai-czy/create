@@ -9,6 +9,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { homeApi } from '../api';
 import { ScrollFloat } from '../components/common/ScrollFloat';
 import { SpecularButton } from '../components/common/SpecularButton';
+import { AuroraBG } from '../components/common/AuroraBG';
+import { DotField } from '../components/common/DotField';
 
 /* ===== HeroBanner ===== */
 function HeroBanner() {
@@ -114,7 +116,7 @@ function HeroBanner() {
               radius={14}
               lineColor="#1A5BB3"
               baseColor="#ffffff"
-              textColor="#0A1628"
+              textColor="#1A5BB3"
               intensity={1.2}
               shineSize={12}
               thickness={1.2}
@@ -126,11 +128,13 @@ function HeroBanner() {
             <SpecularButton
               size="md"
               radius={14}
-              lineColor="rgba(255,255,255,0.6)"
-              baseColor="rgba(255,255,255,0.1)"
-              textColor="#ffffff"
-              intensity={0.8}
-              shineSize={10}
+              lineColor="#1A5BB3"
+              baseColor="#ffffff"
+              textColor="#1A5BB3"
+              intensity={1.2}
+              shineSize={12}
+              thickness={1.2}
+              speed={0.4}
               onClick={() => navigate(slide.cta2.path)}
             >
               {slide.cta2.label}
@@ -180,12 +184,13 @@ function QuickEntry() {
             return (
               <StaggerItem key={entry.title}>
                 <Link to={entry.path}>
-                  <div className="glass rounded-2xl p-8 md:p-10 card-hover cursor-pointer h-full group border border-white/30">
-                    <div className={`w-14 h-14 rounded-xl ${entry.color} flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300`}>
+                  <div className="glass rounded-2xl p-8 md:p-10 card-hover cursor-pointer h-full group border border-white/30 relative overflow-hidden">
+                    <AuroraBG colorStops={['#1A5BB3', '#6C5ED4', '#00B4D8']} speed={0.3} blend={0.3} amplitude={0.6} />
+                    <div className={`relative z-10 w-14 h-14 rounded-xl ${entry.color} flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300`}>
                       <Icon className="w-7 h-7" />
                     </div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">{entry.title}</h3>
-                    <p className="text-sm text-gray-400 leading-relaxed">{entry.description}</p>
+                    <h3 className="relative z-10 text-lg font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">{entry.title}</h3>
+                    <p className="relative z-10 text-sm text-gray-400 leading-relaxed">{entry.description}</p>
                   </div>
                 </Link>
               </StaggerItem>
@@ -345,7 +350,16 @@ function PartnerLogos() {
 /* ===== HomePage ===== */
 export default function HomePage() {
   return (
-    <>
+    <div className="relative min-h-screen">
+      <DotField
+        dotRadius={2}
+        dotSpacing={22}
+        cursorRadius={280}
+        bulgeStrength={160}
+        gradientFrom="rgba(26,91,179,0.45)"
+        gradientTo="rgba(108,94,212,0.30)"
+        glowColor="#1A5BB3"
+      />
       <HeroBanner />
       <QuickEntry />
       <BusinessOverview />
@@ -378,6 +392,6 @@ export default function HomePage() {
       <NewsHighlights />
       <DataShowcase />
       <PartnerLogos />
-    </>
+    </div>
   );
 }

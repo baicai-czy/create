@@ -4,6 +4,7 @@ import Footer from './Footer';
 import { ChatProvider } from '../../hooks/useChatContext';
 import ChatPanel from '../common/ServiceChat';
 import { useChat } from '../../hooks/useChatContext';
+import { ClickSpark } from '../common/ClickSpark';
 
 function ChatWrapper() {
   const { chatOpen, closeChat } = useChat();
@@ -12,6 +13,7 @@ function ChatWrapper() {
 
 export default function Layout() {
   return (
+    <ClickSpark sparkColor="#3B82F6" sparkSize={15} sparkRadius={30} sparkCount={8} duration={500}>
     <ChatProvider>
       <div className="min-h-screen flex flex-col bg-[#F5F7FA]">
         <Header />
@@ -22,5 +24,6 @@ export default function Layout() {
       </div>
       <ChatWrapper />
     </ChatProvider>
+    </ClickSpark>
   );
 }
