@@ -2,17 +2,19 @@ import { heroSlides, quickEntries, businessOverview, newsHighlights, dataShowcas
 import { SectionTitle, LinkButton } from '../components/ui/index';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '../components/common/ScrollReveal';
 import { CountUp } from '../components/common/CountUp';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, ChevronRight, Cloud, Cpu, Lightbulb, Phone } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { homeApi } from '../api';
 import { ScrollFloat } from '../components/common/ScrollFloat';
+import { SpecularButton } from '../components/common/SpecularButton';
 
 /* ===== HeroBanner ===== */
 function HeroBanner() {
   const [current, setCurrent] = useState(0);
   const [banners, setBanners] = useState(heroSlides);
+  const navigate = useNavigate();
 
   // 从后端加载Banner数据
   useEffect(() => {
@@ -71,30 +73,68 @@ function HeroBanner() {
             transition={{ duration: 0.6, ease: [0.25, 0, 0, 1] }}
             className="max-w-2xl"
           >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/8 backdrop-blur-sm border border-white/10 text-white/80 text-xs font-medium mb-8">
-            <span className="relative flex h-2 w-2">
+          {/* 状态指示 + 小标题 */}
+          <div className="flex items-center gap-3 mb-8">
+            <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
             </span>
-            {slide.subtitle}
+            <ScrollFloat
+              animationDuration={0.6}
+              ease="back.out(1.4)"
+              stagger={0.015}
+              mode="auto"
+              textClassName="text-sm md:text-base text-white/70 font-medium tracking-wide"
+            >
+              {slide.subtitle}
+            </ScrollFloat>
           </div>
+          {/* 大标题 */}
           <ScrollFloat
-              animationDuration={0.8}
+              animationDuration={0.9}
               ease="back.out(1.7)"
-              stagger={0.02}
-              textClassName="text-4xl md:text-5xl lg:text-[60px] font-extrabold text-white leading-[1.08] tracking-tight"
+              stagger={0.018}
+              mode="auto"
+              textClassName="text-5xl md:text-7xl lg:text-[80px] font-black text-white leading-[1.05] tracking-tight"
             >
               {slide.title}
             </ScrollFloat>
-          <p className="text-lg text-white/55 leading-relaxed mb-10 max-w-xl">{slide.description}</p>
-          <div className="flex items-center gap-4 flex-wrap">
-            <Link to={slide.cta1.path} className="group inline-flex items-center gap-2.5 px-8 py-4 bg-white text-[#0A1628] font-semibold rounded-2xl hover:bg-gray-100 hover:shadow-2xl hover:shadow-white/10 hover:-translate-y-0.5 transition-all duration-300 text-sm">
-              {slide.cta1.label}
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
-            </Link>
-            <Link to={slide.cta2.path} className="inline-flex items-center gap-2 px-8 py-4 border border-white/20 text-white/80 font-medium rounded-2xl hover:bg-white/8 hover:border-white/40 hover:text-white transition-all duration-300 text-sm">
+          <ScrollFloat
+            animationDuration={0.7}
+            ease="back.out(1.4)"
+            stagger={0.010}
+            mode="auto"
+            textClassName="text-base md:text-lg text-white/55 leading-relaxed max-w-xl"
+          >
+            {slide.description}
+          </ScrollFloat>
+          <div className="flex items-center gap-4 flex-wrap mt-10">
+            <SpecularButton
+              size="md"
+              radius={14}
+              lineColor="#1A5BB3"
+              baseColor="#ffffff"
+              textColor="#0A1628"
+              intensity={1.2}
+              shineSize={12}
+              thickness={1.2}
+              speed={0.4}
+              onClick={() => navigate(slide.cta1.path)}
+            >
+              <span className="flex items-center gap-2">{slide.cta1.label} <ArrowRight className="w-4 h-4" /></span>
+            </SpecularButton>
+            <SpecularButton
+              size="md"
+              radius={14}
+              lineColor="rgba(255,255,255,0.6)"
+              baseColor="rgba(255,255,255,0.1)"
+              textColor="#ffffff"
+              intensity={0.8}
+              shineSize={10}
+              onClick={() => navigate(slide.cta2.path)}
+            >
               {slide.cta2.label}
-            </Link>
+            </SpecularButton>
           </div>
           </motion.div>
         </AnimatePresence>
