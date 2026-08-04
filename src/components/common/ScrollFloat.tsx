@@ -85,10 +85,10 @@ export function ScrollFloat({
   if (typeof children !== 'string') return <>{children}</>;
 
   return (
-    <h2 ref={containerRef} className={`overflow-hidden ${containerClassName}`}>
+    <div ref={containerRef as any} className={`overflow-hidden ${containerClassName}`}>
       <span className={`inline-block text-[clamp(1.6rem,8vw,10rem)] font-black text-center leading-tight ${textClassName}`}>
         {splitText}
       </span>
-    </h2>
+    </div>
   );
 }

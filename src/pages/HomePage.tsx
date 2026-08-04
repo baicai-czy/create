@@ -7,6 +7,7 @@ import { ArrowRight, ChevronRight, Cloud, Cpu, Lightbulb, Phone } from 'lucide-r
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { homeApi } from '../api';
+import { ScrollFloat } from '../components/common/ScrollFloat';
 
 /* ===== HeroBanner ===== */
 function HeroBanner() {
@@ -77,9 +78,14 @@ function HeroBanner() {
             </span>
             {slide.subtitle}
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-[60px] font-extrabold text-white leading-[1.08] tracking-tight mb-8">
-            {slide.title}
-          </h1>
+          <ScrollFloat
+              animationDuration={0.8}
+              ease="back.out(1.7)"
+              stagger={0.02}
+              textClassName="text-4xl md:text-5xl lg:text-[60px] font-extrabold text-white leading-[1.08] tracking-tight"
+            >
+              {slide.title}
+            </ScrollFloat>
           <p className="text-lg text-white/55 leading-relaxed mb-10 max-w-xl">{slide.description}</p>
           <div className="flex items-center gap-4 flex-wrap">
             <Link to={slide.cta1.path} className="group inline-flex items-center gap-2.5 px-8 py-4 bg-white text-[#0A1628] font-semibold rounded-2xl hover:bg-gray-100 hover:shadow-2xl hover:shadow-white/10 hover:-translate-y-0.5 transition-all duration-300 text-sm">
