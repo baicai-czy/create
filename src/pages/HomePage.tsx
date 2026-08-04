@@ -39,53 +39,45 @@ function HeroBanner() {
   }, [banners.length]);
 
   return (
-    <section className="relative min-h-[560px] md:min-h-[650px] flex items-center overflow-hidden bg-gray-900">
-      {/* 极光渐变背景 */}
-      <div className="absolute inset-0">
-        {/* Banner背景图 */}
-        {slide.image && (
-          <div className="absolute inset-0 z-0">
-            <img src={slide.image} alt="" className="w-full h-full object-cover" />
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-gray-900/70 to-transparent z-10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent z-10" />
-        {/* 弥散光 */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-primary/30 via-purple-500/20 to-cyan-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '0s' }} />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-primary/20 via-purple-500/15 to-transparent rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }} />
-        <div className="absolute top-1/2 left-1/2 w-[400px] h-[400px] bg-gradient-to-r from-cyan-500/10 to-primary/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '6s' }} />
+    <section className="relative min-h-[560px] md:min-h-[680px] flex items-center overflow-hidden bg-[#0A1628]">
+      {/* 夜空渐变背景 */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0A1628] via-[#0F2440] to-[#0A1628]" />
+      {/* Banner背景图 */}
+      {slide.image && (<div className="absolute inset-0 z-0"><img src={slide.image} alt="" className="w-full h-full object-cover opacity-35" /><div className="absolute inset-0 bg-[#0A1628]/70" /></div>)}
+      {/* 动态光晕 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="glow-orb glow-orb-blue w-[800px] h-[800px] -top-40 -right-40 animate-float" style={{ animationDelay: '0s' }} />
+        <div className="glow-orb glow-orb-purple w-[600px] h-[600px] -bottom-20 -left-20 animate-float" style={{ animationDelay: '3s' }} />
+        <div className="glow-orb glow-orb-cyan w-[500px] h-[500px] top-1/2 left-1/3 animate-float" style={{ animationDelay: '6s' }} />
+      </div>
+      {/* 网格纹理 */}
+      <div className="absolute inset-0 texture-grid opacity-20" />
+      {/* 城市天际线剪影 */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none z-10 opacity-20">
+        <svg className="w-full h-full" viewBox="0 0 1440 96" preserveAspectRatio="none">
+          <path d="M0,96 L0,60 L30,60 L30,40 L60,40 L60,55 L90,55 L90,25 L120,25 L120,50 L150,50 L150,20 L180,20 L180,45 L210,45 L210,65 L240,65 L240,30 L270,30 L270,50 L300,50 L300,15 L330,15 L330,40 L360,40 L360,55 L390,55 L390,22 L420,22 L420,48 L450,48 L450,35 L480,35 L480,58 L510,58 L510,18 L540,18 L540,42 L570,42 L570,28 L600,28 L600,52 L630,52 L630,20 L660,20 L660,45 L690,45 L690,60 L720,60 L720,25 L750,25 L750,40 L780,40 L780,55 L810,55 L810,30 L840,30 L840,48 L870,48 L870,38 L900,38 L900,58 L930,58 L930,22 L960,22 L960,44 L990,44 L990,32 L1020,32 L1020,50 L1050,50 L1050,35 L1080,35 L1080,48 L1110,48 L1110,28 L1140,28 L1140,42 L1170,42 L1170,55 L1200,55 L1200,15 L1230,15 L1230,38 L1260,38 L1260,50 L1290,50 L1290,25 L1320,25 L1320,45 L1350,45 L1350,52 L1380,52 L1380,30 L1410,30 L1410,48 L1440,48 L1440,96 Z" fill="rgba(26,91,179,0.3)"/>
+        </svg>
       </div>
 
-      {/* 几何装饰 */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
-        <div className="absolute top-32 right-24 w-80 h-80 border border-white/10 rounded-full animate-float" style={{ animationDelay: '0s' }} />
-        <div className="absolute top-40 right-40 w-60 h-60 border border-white/5 rounded-2xl rotate-45 animate-float" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-32 left-24 w-72 h-72 border border-white/8 rounded-full animate-float" style={{ animationDelay: '2.5s' }} />
-        <div className="absolute bottom-40 left-40 w-48 h-48 border border-white/5 rounded-2xl -rotate-12 animate-float" style={{ animationDelay: '4s' }} />
-        {/* 小方块 */}
-        <div className="absolute top-60 right-80 w-12 h-12 border border-white/15 rounded-lg rotate-6 animate-float" style={{ animationDelay: '5s' }} />
-        <div className="absolute bottom-60 left-60 w-8 h-8 border border-white/10 rounded rotate-45 animate-float" style={{ animationDelay: '3s' }} />
-      </div>
-
-      <div className="relative max-w-[1440px] mx-auto px-4 md:px-8 py-20 md:py-28 z-20">
+      <div className="relative max-w-[1440px] mx-auto px-4 md:px-8 py-24 md:py-32 z-20 w-full">
         <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-white/90 text-xs mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/8 backdrop-blur-sm border border-white/10 text-white/80 text-xs font-medium mb-8">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
             </span>
             {slide.subtitle}
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+          <h1 className="text-4xl md:text-5xl lg:text-[60px] font-extrabold text-white leading-[1.08] tracking-tight mb-8">
             {slide.title}
           </h1>
-          <p className="text-lg text-white/80 mb-8 max-w-xl">{slide.description}</p>
+          <p className="text-lg text-white/55 leading-relaxed mb-10 max-w-xl">{slide.description}</p>
           <div className="flex items-center gap-4 flex-wrap">
-            <Link to={slide.cta1.path} className="group inline-flex items-center gap-2 px-8 py-3.5 bg-white text-primary font-medium rounded-xl hover:bg-gray-50 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
+            <Link to={slide.cta1.path} className="group inline-flex items-center gap-2.5 px-8 py-4 bg-white text-[#0A1628] font-semibold rounded-2xl hover:bg-gray-100 hover:shadow-2xl hover:shadow-white/10 hover:-translate-y-0.5 transition-all duration-300 text-sm">
               {slide.cta1.label}
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
             </Link>
-            <Link to={slide.cta2.path} className="inline-flex items-center gap-2 px-8 py-3.5 border border-white/30 text-white font-medium rounded-xl hover:bg-white/10 hover:border-white/50 transition-all duration-300">
+            <Link to={slide.cta2.path} className="inline-flex items-center gap-2 px-8 py-4 border border-white/20 text-white/80 font-medium rounded-2xl hover:bg-white/8 hover:border-white/40 hover:text-white transition-all duration-300 text-sm">
               {slide.cta2.label}
             </Link>
           </div>
