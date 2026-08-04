@@ -103,6 +103,20 @@ export default {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        // Aurora 极光
+        aurora1: {
+          '0%, 100%': { transform: 'rotate(0deg) scale(1)' },
+          '33%': { transform: 'rotate(3deg) scale(1.05) translate(2%, -1%)' },
+          '66%': { transform: 'rotate(-2deg) scale(0.98) translate(-1%, 2%)' },
+        },
+        aurora2: {
+          '0%, 100%': { transform: 'rotate(0deg) scale(1.05)' },
+          '50%': { transform: 'rotate(-4deg) scale(0.95) translate(-2%, 2%)' },
+        },
+        aurora3: {
+          '0%, 100%': { transform: 'rotate(0deg) scale(0.95)' },
+          '50%': { transform: 'rotate(3deg) scale(1.08) translate(3%, -1%)' },
+        },
       },
     },
   },
